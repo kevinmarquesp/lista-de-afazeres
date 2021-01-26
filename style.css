@@ -1,0 +1,9 @@
+* { margin: 0 }
+body {
+    font-family: Arial;
+    text-align: center;
+}
+
+h1, div.adicionar-a-lista, section { margin-top: 30px; }
+
+section { text-align: left; }
