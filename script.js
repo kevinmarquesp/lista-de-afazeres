@@ -1,3 +1,10 @@
+// Quando a página abrir.
+function quandoCarregar() {
+    dataSistema()
+    selecionarNoArmazenamentoInterno()
+    atualizarPagina()
+}
+
 // Data atual do sistema.
 function dataSistema() {
     let newDate = new Date()
@@ -9,25 +16,69 @@ function dataSistema() {
     dataAtualDoSistema.innerText = dataAtual
 }
 
-// Adicionar um item novo a lista.
-function atualizarTextoNaPagina(item) {
-    let classMarcar = item.marcado? 'marcado' : 'nao-marcado'
-    let buttonMarcar = item.marcado? 'Desmarcar' : 'Marcar'
+// Atualizando a página e selecionando cada item.
+function atualizarPagina() {
+    listaPrincipal.innerHTML = ''
 
-    let texto = `<li class="item ${classMarcar}"> <span id="texto">${item.texto}</span>
-        <button id="remover">REMOVER</button>
-        <button id="marcar">${buttonMarcar}</button>
-    </li>`
-    listaPrincipal.insertAdjacentHTML( 'beforeend', texto)
+    for( let c in lista) {
+        if( !(lista[c].lixo)) {
+            let classMarcado = lista[c].marcado? 'marcado' : 'nao-marcado'
+            let textoMarcado = lista[c].marcado? 'Desmarcar' : 'Marcar'
+
+            let texto = `<li class="item ${classMarcado}">
+                <span id="texto">${lista[c].nome}</span>
+                <button id="remover">REMOVER</button>
+                <button id="marcar">${textoMarcado}</button>
+            </li>`
+
+            listaPrincipal.insertAdjacentHTML( 'beforeend', texto)
+        }
+    }
+
+    let removerButtons = document.querySelectorAll( 'button#remover')
+    let marcarButtons = document.querySelectorAll( 'button#marcar')
+
+    for( let c = 0; c < lista.length; c++) {
+        removerButtons[c].addEventListener( 'click', function() {
+            lista[c].lixo = true
+            lista = limparOsLixos()
+            atualizarPagina()
+        })
+        marcarButtons[c].addEventListener( 'click', function() {
+            if(lista[c].marcado) {
+                lista[c].marcado = false
+            } else {
+                lista[c].marcado = true
+            }
+            atualizarPagina()
+        })
+    }
+    salvarNoArmazenamentoInterno()
 }
 
 // Removendo um item da lista.
+function limparOsLixos() {
+    let resultado = []
+    for( let c = 0; c < lista.length; c++) {
+        if( !(lista[c].lixo)) {
+            resultado.push(lista[c])
+        }
+    }
+    return resultado
+}
 
-
+// Armazenar e selecionar no computador da pessoa.
+function salvarNoArmazenamentoInterno() {
+    localStorage.setItem( 'lista', JSON.stringify(lista))
+}
+function selecionarNoArmazenamentoInterno() {
+    lista = JSON.parse( localStorage.getItem( 'lista'))
+    console.log(lista)
+}
 
 
 // Declarando as variáveis.
-let lista = [], id = 0
+let lista = []
 
 // Selecionando os elementos.
 const dataAtualDoSistema = document.querySelector( 'p#data-sistema')
@@ -45,17 +96,20 @@ document.addEventListener( 'keyup', function(event) {
 adicionarNovoItem.addEventListener( 'click', function() {
     if(textoDoItem.value) {
         lista.push( {
-            texto:textoDoItem.value,
-            id: id,
+            nome:textoDoItem.value,
             marcado: false,
             lixo: false
         })
-
-        listaPrincipal.innerHTML = ''
-        for( let c in lista) {
-            atualizarTextoNaPagina( lista[c])
-        }
+        atualizarPagina()
     }
     textoDoItem.value = ''
-    id++
+})
+
+// Limpando/removendo a lista inteira.
+limparLista.addEventListener( 'click', function() {
+    for( let c in lista) {
+        lista[c].lixo = true
+    }
+    lista = limparOsLixos()
+    atualizarPagina()
 })
