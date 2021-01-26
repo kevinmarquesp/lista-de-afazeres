@@ -7,3 +7,9 @@ body {
 h1, div.adicionar-a-lista, section { margin-top: 30px; }
 
 section { text-align: left; }
+li.marcado {
+    opacity: 30%;
+}
+li.marcado > span#texto {
+    text-decoration: line-through;
+}
