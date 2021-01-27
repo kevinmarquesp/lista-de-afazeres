@@ -73,6 +73,9 @@ function salvarNoArmazenamentoInterno() {
 }
 function selecionarNoArmazenamentoInterno() {
     lista = JSON.parse( localStorage.getItem( 'lista'))
+    if(lista === null) {
+        lista = []
+    }
     console.log(lista)
 }
 
