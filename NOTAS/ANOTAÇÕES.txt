@@ -1,9 +1,0 @@
-// Selecionando um elemento da lista.
-$ let elemento = event.target
-retorna o elemento clicado.
-
-$ lista.insertAdjacentHTML( posição, item)
-Insere o item na posição indicada (antes do final).
-
-$ element.classList.toggle(LINE_THROUGH)
-Altera a classe do elemento.
